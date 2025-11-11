@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e2f, #34344a);
+    }
+
+    .calculator {
+      background: #12121e;
+      width: 340px;
+      border-radius: 40px;
+      padding: 25px 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      border: 2px solid #2e2e4a;
+    }
+
+    .display-container {
+      background: #1c1c2e;
+      border-radius: 20px;
+      padding: 15px;
+      color: white;
+      text-align: right;
+      min-height: 90px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .display {
+      font-size: 2rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: right;
+      width: 100%;
+    }
+
+    .answer {
+      font-size: 1rem;
+      color: #00ff9d;
+      opacity: 0.7;
+      height: 22px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      height: 70px;
+      border: none;
+      border-radius: 20px;
+      background: #23233a;
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 500;
+      box-shadow: inset 2px 2px 6px rgba(255, 255, 255, 0.05),
+                  inset -2px -2px 8px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .operator {
+      background: #ff9f0a;
+      color: white;
+    }
+
+    .clear {
+      background: #ff3b30;
+    }
+
+    .percentage {
+      background: #007aff;
+    }
+
+    .equal {
+      background: #34c759;
+      grid-column: span 2;
+    }
+
+    .backspace {
+      background: #6c63ff;
+      grid-column: span 2;
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 400px) {
+      .calculator {
+        width: 95%;
+        border-radius: 25px;
+        padding: 15px;
+      }
+      button {
+        height: 60px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display-container">
+      <input type="text" id="display" class="display" readonly />
+      <div id="answer" class="answer"></div>
+    </div>
+
+    <div class="buttons">
+      <button class="clear">C</button>
+      <button>(</button>
+      <button>)</button>
+      <button class="operator">/</button>
+
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="operator">*</button>
+
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="operator">-</button>
+
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="operator">+</button>
+
+      <button>0</button>
+      <button>00</button>
+      <button>.</button>
+      <button class="percentage">%</button>
+
+      <button class="equal">=</button>
+      <button class="backspace">⌫</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const answer = document.getElementById("answer");
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.classList.contains("clear")) {
+          display.value = "";
+          answer.textContent = "";
+        } else if (btn.classList.contains("backspace")) {
+          display.value = display.value.slice(0, -1);
+          updateAnswer();
+        } else if (btn.classList.contains("equal")) {
+          try {
+            display.value = eval(display.value);
+            answer.textContent = "";
+          } catch {
+            display.value = "Error";
+          }
+        } else if (btn.classList.contains("percentage")) {
+          if (display.value !== "") {
+            display.value = eval(display.value) / 100;
+            answer.textContent = "";
+          }
+        } else {
+          display.value += btn.textContent;
+          updateAnswer();
+        }
+      });
+    });
+
+    function updateAnswer() {
+      try {
+        if (display.value !== "") {
+          const result = eval(display.value);
+          if (!isNaN(result)) {
+            answer.textContent = "= " + result;
+          } else {
+            answer.textContent = "";
+          }
+        } else {
+          answer.textContent = "";
+        }
+      } catch {
+        answer.textContent = "";
+      }
+    }
+  </script>
+</body>
+</html>
